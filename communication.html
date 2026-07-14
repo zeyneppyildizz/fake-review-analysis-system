@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <cyber-navbar></cyber-navbar>
+    
+    <main class="flex-grow-1">
+        <div class="container py-5">
+            
+            <div class="text-center mb-5">
+                <h1 class="display-4 hero-title text-white">BİZİMLE İLETİŞİME GEÇİN</h1>
+                <p class="text-secondary fs-5 mt-2">Yardıma mı ihtiyacınız var? Sistemde bir açık mı buldunuz? Bize ulaşın.</p>
+            </div>
+        
+            <div class="row g-4 mb-5 align-items-stretch">
+                
+                <div class="col-lg-6">
+                    <form id="contactForm" class="glass-card p-5 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <h4 class="mb-4 fw-bold text-white">
+                               İletişim Formu
+                            </h4>
+                            <div class="mb-3">
+                                <label for="name" class="form-label text-secondary small">Kullanıcı Adınız</label>
+                                <input type="text" class="form-control search-box" id="name" placeholder="Kullanıcı adınızı girin" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label text-secondary small">E-posta Adresiniz</label>
+                                <input type="email" class="form-control search-box" id="email" placeholder="E-posta adresinizi girin" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="message" class="form-label text-secondary small">Mesajınız</label>
+                                <textarea class="form-control search-box" id="message" rows="10" placeholder="Mesajınızı buraya yazın..." required style="resize: none;"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-neon w-100 fw-bold">
+                            <i class="fa-solid fa-paper-plane me-2"></i>GÖNDER
+                        </button>
+                    </form>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="glass-card p-5 h-100 d-flex flex-column">
+                        <h4 class="mb-4 fw-bold text-white">
+                            <i class="fa-solid fa-map-location-dot me-2"></i> Ofis Konumumuz
+                        </h4>
+                        
+                        <div class="flex-grow-1 w-100 rounded overflow-hidden position-relative" style="border: 1px solid var(--border-subtle); min-height: 300px;">
+                            
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119616.49649689048!2d27.18204898127181!3d38.468582647539144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b97c847c2ade23%3A0xc9ef319820d8565c!2zQm9ybm92YS_EsHptaXI!5e1!3m2!1str!2str!4v1780466108606!5m2!1str!2str" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0; position: absolute; top: 0; left: 0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade">
+                              </iframe>
+
+                        </div>
+                        
+                        <div class="mt-4 text-secondary small">
+                            <p class="m-0"><i class="fa-solid fa-location-crosshairs me-2" style="color: var(--primary-color);"></i> İzmir, Türkiye</p>
+                            <p class="m-0 mt-1"><i class="fa-solid fa-envelope me-2" style="color: var(--primary-color);"></i> contact.radarai@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <cyber-footer></cyber-footer>
+      
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

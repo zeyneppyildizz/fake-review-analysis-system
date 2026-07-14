@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Ekran | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    
+   <cyber-navbar></cyber-navbar>
+
+<main class="flex-grow-1">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 hero-title text-white">SAHTE YORUM RADARI</h1>
+            <p class="text-white fs-5 mt-2">Amazon verilerini anlık olarak analiz edin.</p>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8">
+                <div class="radar-search-container" style="border: 1px solid var(--border-subtle) !important;">
+                    
+                    <div class="radar-icon-box" style="border: none !important;">
+                        <i class="fa-solid fa-link text-white"></i>
+                    </div>
+                    
+                    <input type="url" id="amazonUrl" class="radar-input" placeholder="Amazon ürün linkini yapıştırın...">
+                    
+                    <button type="button" id="btnAnaliz" class="radar-btn">TARAMAYI BAŞLAT</button>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="text-center py-5" style="display: none;">
+            <div class="radar-spinner mb-4" style="border-top-color: var(--primary-color);"></div>
+            <h3 class="hero-title fs-4 text-white">Analiz Ediliyor...</h3>
+        </div>
+
+        <div id="results" style="display: none;">
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid var(--primary-color);">
+                        <div class="stat-value text-white" id="toplamYorum">-</div>
+                        <div class="text-white text-uppercase fw-bold mt-2">Toplanan Veri</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid #22c55e;">
+                        <div class="stat-value text-success" id="gercekYorum">-</div>
+                        <div class="text-white text-uppercase fw-bold mt-2">Organik</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid #ef4444;">
+                        <div class="stat-value text-danger" id="sahteYorum">-</div>
+                        <div class="text-white text-uppercase fw-bold mt-2">Sentetik</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid #f59e0b;">
+                        <div class="stat-value text-warning" id="sahtelikOrani">-%</div>
+                        <div class="text-white text-uppercase fw-bold mt-2">Risk Skoru</div>
+                        <div class="progress mt-3" style="height: 6px; background: rgba(255,255,255,0.1);">
+                            <div id="riskBar" class="progress-bar bg-warning" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-5 justify-content-center">
+                <div class="col-md-6 text-center">
+                    <button id="btnTakibeAl" class="btn w-100" style="border: 1px solid #f59e0b; color: #f59e0b; background: transparent; font-weight: 800; padding: 12px 30px; border-radius: 6px; letter-spacing: 1px; transition: all 0.3s ease;">
+                        <i class="fa-solid fa-bell me-2"></i> Takibe Al 
+                    </button>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-xl-4 col-lg-5">
+                    <div class="d-flex flex-column gap-4 h-100">
+                        <div class="glass-card p-4">
+                            <h5 class="fw-bold mb-4 text-uppercase text-white">Dağılım</h5>
+                            <div class="d-flex align-items-center justify-content-center" style="position: relative; min-height: 250px;">
+                                <canvas id="sonucGrafigi"></canvas>
+                                <div id="chart-center-text" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); text-align: center; display: none;">
+                                    <div id="chart-percentage" style="font-size: 2.8rem; font-weight: 700; color: #4ade80;">%0</div>
+                                    <div style="font-size: 0.75rem; color: #ffffff;">Organik</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 flex-grow-1">
+                            <h5 class="fw-bold mb-4 text-uppercase text-white">Güven Skoru Dağılımı</h5>
+                            <div style="min-height: 200px;">
+                                <canvas id="ikinciGrafik"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-8 col-lg-7">
+                    <div class="glass-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                            <h5 class="fw-bold mb-0 text-uppercase text-white">Analiz Dökümü</h5>
+                            <div id="filter-panel" style="display: none; gap: 10px; flex-wrap: wrap;">
+                                <select id="filter-status" onchange="applyFilters()" class="form-select form-select-sm search-box" style="width: auto; font-weight: 500;"><option value="ALL">Tüm Yorumlar</option><option value="GERÇEK">Sadece Gerçekler</option><option value="SAHTE">Sadece Sahteler</option></select>
+                                <select id="filter-confidence" onchange="applyFilters()" class="form-select form-select-sm search-box" style="width: auto; font-weight: 500;"><option value="ALL">Tüm Skorlar</option><option value="HIGH">Skor > %90</option><option value="LOW">Skor < %70</option></select>
+                                <select id="sort-order" onchange="applyFilters()" class="form-select form-select-sm search-box" style="width: auto; font-weight: 500;"><option value="DEFAULT">Sıralama: Varsayılan</option><option value="DESC">Skor: Yüksek->Düşük</option><option value="ASC">Skor: Düşük->Yüksek</option></select>
+                            </div>
+                        </div>
+                        <div class="table-responsive" style="max-height: 680px;"> 
+                            <table class="table custom-table mb-0 align-middle">
+                                <tbody id="yorumListesi"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-2">
+                <div class="col-xl-7 col-lg-6">
+                    <div class="glass-card p-4 h-100">
+                        <h5 class="fw-bold mb-4 text-uppercase text-danger">
+                            <i class="fa-solid fa-radar-node me-2"></i> Sahte Yorum Karakteristiği
+                        </h5>
+                        <div style="min-height: 250px;">
+                            <canvas id="uzunlukGrafigi"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="glass-card p-4 h-100">
+                        <h5 class="fw-bold mb-4 text-uppercase text-danger">
+                            Botların En Çok Kullandığı Kelimeler
+                        </h5>
+                        <div style="min-height: 250px;">
+                            <canvas id="kelimeGrafigi"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</main>
+
+    <cyber-footer></cyber-footer>
+
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

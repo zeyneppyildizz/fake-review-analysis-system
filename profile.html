@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <cyber-navbar></cyber-navbar>
+
+    <main class="flex-grow-1">
+        <div class="container py-5">
+            <div class="row g-4">
+                
+                <div class="col-lg-6">
+                    <div class="glass-card p-5 h-100">
+                        <h3 class="hero-title text-white mb-4">
+                            <i class="fa-solid fa-user-gear me-2 text-white"></i>Hesap Bilgileri
+                        </h3>
+                        
+                        <div class="mb-3">
+                            <label class="text-white small mb-1">Kullanıcı Adı (Değiştirilemez)</label>
+                            <input type="text" id="profUser" class="form-control search-box" readonly style="opacity: 0.6;">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="text-white small mb-1">E-Posta</label>
+                            <input type="email" id="profEmail" class="form-control search-box">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="text-white small mb-1">Telefon</label>
+                            <input type="tel" id="profPhone" class="form-control search-box">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="position-relative mb-3">
+                                <label class="text-white small mb-1">Yeni Şifre</label>
+                                <input type="password" id="profPass" class="form-control search-box pe-5" placeholder="Yeni Şifreniz">
+                                <i class="fa-solid fa-eye password-toggle-icon" style="margin-right:12px;" onclick="togglePassword('profPass', this)"></i>
+                            </div>
+                            
+                            <div class="position-relative mb-3"> 
+                                <label class="text-white small mb-1">Yeni Şifre Tekrar</label>
+                                <input type="password" id="profPassConfirm" class="form-control search-box pe-5" placeholder="Şifrenizi Doğrulayın">
+                                <i class="fa-solid fa-eye password-toggle-icon" style="margin-right:12px;" onclick="togglePassword('profPassConfirm', this)"></i>
+                            </div>
+                        </div>
+                        
+                        <button onclick="updateUserProfile()" class="btn btn-neon w-100 mt-3">
+                            <i class="fa-solid fa-user-check me-2"></i> Bilgileri Güncelle
+                        </button>
+                        
+                        <button onclick="hesabiKalicilOlarakSil()" class="btn btn-neon-delete w-100 mt-4 fw-bold">
+                            <i class="fa-solid fa-trash-can me-2"></i> Hesabımı Sil
+                        </button>
+                        
+                        <div id="profMsg" class="mt-3 text-center" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="glass-card p-5 h-100">
+                        <h3 class="hero-title text-white mb-4">
+                            <i class="fa-brands fa-amazon me-2 text-warning"></i>Amazon Entegrasyonu
+                        </h3>
+                        <p class="text-white mb-4">Sistemin bot korumalarını (Captcha vb.) aşabilmesi için Amazon hesabınızı bağlayın.</p>
+                        
+                        <div class="mt-4 p-3 rounded" style="background: rgba(255, 255, 255, 0.03); border: 1px dashed var(--border-subtle);">
+                            <h6 class="text-white mb-2" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                <i class="fa-solid fa-shield-halved me-2" style="color: var(--primary-color);"></i> Sistem Güvenliği
+                            </h6>
+                            <ul class="text-white m-0 ps-3" style="font-size: 0.85rem; line-height: 1.6;">
+                                <li>Kimlik bilgileriniz <strong style="color: var(--primary-color);">AES-256</strong> standartlarında şifrelenerek saklanır.</li>
+                                <li>Amazon şifreniz hiçbir insan veya 3. parti kurumla paylaşılmaz.</li>
+                                <li>Bu entegrasyon sadece <strong style="color: var(--primary-color);">CAPTCHA bot korumasını</strong> aşmak için arka planda kullanılır.</li>
+                            </ul>
+                        </div>
+                        <br>
+                        
+                        <div class="mb-3">
+                            <label class="text-white small mb-1">Amazon E-Posta</label>
+                            <input type="email" id="amazonEmail" class="form-control search-box" placeholder="Amazon Hesap E-Postanız">
+                        </div>
+                        
+                        <div class="position-relative mb-3">
+                            <label class="text-white small mb-1">Amazon Şifre</label>
+                            <input type="password" id="amazonPass" class="form-control search-box pe-5" placeholder="Amazon Şifreniz">
+                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword('amazonPass', this)"></i>
+                        </div>
+                        
+                        <button onclick="saveAmazonCredentials()" class="btn btn-neon w-100 mt-3 fw-bold">
+                            <i class="fa-solid fa-floppy-disk me-2"></i> Bilgileri Kaydet
+                        </button>
+                        
+                        <div id="saveMsg" class="text-success mt-3 text-center fw-bold" style="display: none;">
+                            <i class="fa-solid fa-check-circle me-1"></i> Entegrasyon Kaydedildi!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="accountDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-3" style="background: rgba(15, 23, 42, 0.95); border: 1px solid #ef4444; border-radius: 12px; backdrop-filter: blur(10px);">
+                
+                <div class="mb-3 mt-2">
+                    <h6 class="text-white fw-bold m-0">
+                        HESABIMI SİL?
+                    </h6>
+                </div>
+                
+                <p class="text-white mb-4" style="font-size: 0.85rem;">
+                    Hesabınız kalıcı olarak silinecek. Emin misiniz?
+                </p>
+                
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-50 text-white" data-bs-dismiss="modal">
+                        İptal
+                    </button>
+                    <button type="button" class="btn btn-sm btn-neon-delete w-50 fw-bold" id="btnConfirmAccountDelete">
+                        Sil
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <cyber-footer></cyber-footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

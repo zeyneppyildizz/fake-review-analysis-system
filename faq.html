@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSS | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <cyber-navbar></cyber-navbar>
+
+    <main class="flex-grow-1">
+        <div class="container py-5" style="max-width: 900px;">
+            <div class="text-center mb-5">
+                <h1 class="display-4 hero-title text-white">SIKÇA SORULAN SORULAR</h1>
+                <p class="text-white fs-5 mt-2">Sistemimiz hakkında merak ettiğiniz her şey.</p>
+            </div>
+
+            <div class="accordion" id="faqAccordion">
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            Radar AI tam olarak nasıl çalışır?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Radar AI, e-ticaret sitelerindeki (şu an için Amazon.uk ve Amazon.us) ürün yorumlarını 
+                            Doğal Dil İşleme (NLP) algoritmaları ve Derin Öğrenme modelleri kullanarak analiz eder. 
+                            Bir yorumun yazım tarzı, kelime tekrarları, duygu durumu ve uzunluğu gibi onlarca farklı metriği saniyeler içinde tarayarak, 
+                            o yorumun gerçek bir insan tarafından mı yoksa bot ağları tarafından mı yazıldığını tespit eder.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            Güven Skoru (%) ne anlama geliyor?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Güven skoru, yapay zeka modelimizin verdiği karardan ne kadar "emin" olduğunu gösterir. 
+                            Örneğin; "Sahte - %98" skoru alan bir yorumun botlar tarafından oluşturulma ihtimali kesinliğe çok yakındır. 
+                            Modelimiz karar verirken şüpheli kelime ağlarını, tekrar eden cümle yapılarını ve anormal övgü şablonlarını matematiksel bir skora dönüştürür.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            Neden Amazon hesabımı sisteme bağlamam gerekiyor?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Amazon gibi büyük e-ticaret platformları, verilerini toplu olarak çekmeye çalışan botlara karşı 
+                            CAPTCHA ve benzeri katı güvenlik önlemleri uygular. 
+                            Radar AI'ın bu yorumları sizin adınıza kesintisiz okuyabilmesi ve güvenlik duvarlarına takılmaması için, 
+                            sistemi doğrulanmış bir kullanıcı (oturum) üzerinden çalıştırması gerekmektedir. 
+                            Verileriniz şifrelenerek korunur ve sadece analiz süreçleri için kullanılır.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                            Sistem %100 doğru sonuç verir mi?
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Hiçbir yapay zeka modeli %100 kusursuz değildir. 
+                            Ancak Radar AI, binlerce gerçek ve sahte yorum içeren geniş veri setleriyle eğitilmiş 
+                            yüksek doğruluk oranına sahip bir makine öğrenmesi modelidir. 
+                            Sistem, şüpheli gördüğü yorumları sizin için filtreleyerek manuel kontrol sürenizi %90 oranında kısaltır 
+                            ve size analitik bir içgörü sağlar.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                            Verilerim ve analiz geçmişim güvende mi?
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Evet. Radar AI çok katmanlı bir güvenlik mimarisiyle tasarlanmıştır. 
+                            Parolalarınız ve Amazon entegrasyon bilgileriniz veritabanımızda geri döndürülemez Hash algoritmalarıyla şifrelenerek saklanır. 
+                            Ayrıca sistemimiz, dışarıdan gelebilecek bot ağlarına ve Brute Force saldırılarına karşı özel savunma mekanizmalarıyla korunmaktadır.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <cyber-footer></cyber-footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

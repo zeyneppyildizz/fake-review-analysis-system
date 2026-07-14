@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karşılaştırma Paneli | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <cyber-navbar></cyber-navbar>
+
+<main class="flex-grow-1">
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="glass-card p-4 mb-4">
+                    <div class="text-center mb-4">
+                        <h2 class="hero-title text-white">ÜRÜN KARŞILAŞTIRMA</h2>
+                        <p class="text-white small" style="letter-spacing: 1px;">İki Farklı Ürünü Analiz Et ve Karşılaştır</p>
+                    </div>
+
+                    <form id="compareForm" onsubmit="event.preventDefault();">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-white small mb-1">1. Ürün Linki (Amazon URL)</label>
+                                <input type="text" class="form-control search-box" id="url1" required placeholder="https://www.amazon.co.uk/dp/...">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-white small mb-1">2. Ürün Linki (Amazon URL)</label>
+                                <input type="text" class="form-control search-box" id="url2" required placeholder="https://www.amazon.co.uk/dp/...">
+                            </div>
+                        </div>
+                        <button type="button" id="btnKiyasla" class="btn btn-neon w-100 py-2 mt-2">Karşılaştır</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="text-center my-5" style="display: none;">
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+            <h5 class="text-white fw-bold animate-pulse">Karşılaştırma Yapılıyor...</h5>
+            <p class="text-white small">Analiz Ediliyor...</p>
+        </div>
+
+        <div id="resultsPanel" class="row mt-4" style="display: none;">
+            
+            <div class="col-12 mb-4">
+                <div class="glass-card p-4 text-center" style="border: 1px solid var(--border-subtle);">
+                    <h4 class="text-white fw-bold">RADAR AI KARAR DESTEK TAVSİYESİ</h4>
+                    <p id="dssDecisionText" class="fs-5 mt-3 px-3 text-white" style="border-left: 2px solid var(--primary-color); border-right: 2px solid var(--primary-color);"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="glass-card p-4 h-100" style="border: 1px solid var(--border-subtle);">
+                    <h4 class="text-white fw-bold mb-3 pb-2" style="border-bottom: 1px solid var(--border-subtle);">
+                        <i class="fa-solid fa-box me-2" style="color: var(--primary-color);"></i> 1. ÜRÜN ANALİZİ
+                    </h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-white">Yapay Zeka Risk Skoru:</span>
+                        <h2 id="u1-risk" class="fw-bold m-0 text-white"></h2>
+                    </div>
+                    <div class="progress mb-4" style="height: 10px; background: rgba(0,0,0,0.5);">
+                        <div id="u1-progress" class="progress-bar bg-primary" role="progressbar"></div>
+                    </div>
+                    <p class="small text-white m-0">Toplam Organik Yorum: <span id="u1-gercek" class="text-success fw-bold"></span></p>
+                    <p class="small text-white mb-4">Toplam Sentetik Yorum: <span id="u1-sahte" class="text-danger fw-bold"></span></p>
+                    
+                    <div style="position: relative; height:200px; width:100%">
+                        <canvas id="pieChart1"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="glass-card p-4 h-100" style="border: 1px solid var(--border-subtle);">
+                    <h4 class="text-white fw-bold mb-3 pb-2" style="border-bottom: 1px solid var(--border-subtle);">
+                        <i class="fa-solid fa-box me-2" style="color: var(--primary-color);"></i> 2. ÜRÜN ANALİZİ
+                    </h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-white">Yapay Zeka Risk Skoru:</span>
+                        <h2 id="u2-risk" class="fw-bold m-0 text-white"></h2>
+                    </div>
+                    <div class="progress mb-4" style="height: 10px; background: rgba(0,0,0,0.5);">
+                        <div id="u2-progress" class="progress-bar bg-primary" role="progressbar"></div>
+                    </div>
+                    <p class="small text-white m-0">Toplam Organik Yorum: <span id="u2-gercek" class="text-success fw-bold"></span></p>
+                    <p class="small text-white mb-4">Toplam Sentetik Yorum: <span id="u2-sahte" class="text-danger fw-bold"></span></p>
+                    
+                    <div style="position: relative; height:200px; width:100%">
+                        <canvas id="pieChart2"></canvas>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-12 mb-4">
+                <div class="glass-card p-4" style="border: 1px solid var(--border-subtle);">
+                    <h4 class="text-white text-center fw-bold mb-4">
+                        <i class="fa-solid fa-chart-bar me-2" style="color: var(--primary-color);"></i> GÜVEN SKORU DAĞILIMI
+                    </h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h5 class="fw-bold mb-3 text-center" style="color: var(--primary-color); font-size: 1.1rem; letter-spacing: 1px;">
+                                1. ÜRÜN - DAĞILIM
+                            </h5>
+                            <div style="position: relative; height:250px; width:100%">
+                                <canvas id="distChart1"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <h5 class="fw-bold mb-3 text-center" style="color: var(--primary-color); font-size: 1.1rem; letter-spacing: 1px;">
+                                2. ÜRÜN - DAĞILIM
+                            </h5>
+                            <div style="position: relative; height:250px; width:100%">
+                                <canvas id="distChart2"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+    <cyber-footer></cyber-footer>
+
+    <script defer src="components.js"></script>
+    <script defer src="compare.js"></script>
+</body>
+</html>

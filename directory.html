@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Protokolleri | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <cyber-navbar></cyber-navbar>
+    
+    <div class="container-fluid px-4 px-lg-5 mt-5 pt-4 flex-grow-1">
+        
+        <div class="command-header">
+            <h2 class="m-0 fw-bold text-white">NLP Tehdit Tespit Protokolleri</h2>
+        </div>
+
+        <div class="row g-4 mb-5">
+            
+            <div class="col-lg-5">
+                <p class="text-white mb-4" style="font-size: 0.95rem;">
+                    Radar AI, manipülatif e-ticaret verilerini yakalamak için eşzamanlı çalışan 5 farklı makine öğrenimi modülü kullanır. 
+                </p>
+
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-id">SYS.MOD_01 // TEMPORAL_ANOMALY</div>
+                        <h4 class="module-title">Zaman Yığılması Tespiti</h4>
+                        <p class="module-desc">Ürünlerin yorum alma sıklığındaki ani ve organik olmayan artışları (spike) milisaniye bazında tespit eder.</p>
+                    </div>
+
+                    <div class="module-item">
+                        <div class="module-id">SYS.MOD_02 // SEMANTIC_DEPTH</div>
+                        <h4 class="module-title">Semantik Sığlık Analizi</h4>
+                        <p class="module-desc">Kopyala-yapıştır bot şablonlarını yakalamak için leksikal çeşitlilik ve spesifik ürün kelimelerinin (isim/sıfat) varlığını tarar.</p>
+                    </div>
+
+                    <div class="module-item">
+                        <div class="module-id">SYS.MOD_03 // RATING_POLARIZATION</div>
+                        <h4 class="module-title">U-Tipi Dağılım Taraması</h4>
+                        <p class="module-desc">Ara puanların (2,3,4) olmadığı, sadece 1 ve 5 yıldızdan oluşan kutuplaşmış ve manipüle edilmiş istatistiksel eğrileri yakalar.</p>
+                    </div>
+
+                    <div class="module-item">
+                        <div class="module-id">SYS.MOD_04 // PROFILE_GRAPH</div>
+                        <h4 class="module-title">Sosyal Ağ ve Tarlalar</h4>
+                        <p class="module-desc">Aynı gün içinde birbirinden bağımsız onlarca kategoriye yorum yapan sahte profil çiftliklerini çapraz sorgu ile tespit eder.</p>
+                    </div>
+
+                    <div class="module-item">
+                        <div class="module-id">SYS.MOD_05 // MULTIMEDIA_CHECK</div>
+                        <h4 class="module-title">Medya ve Fiziksel Kanıt</h4>
+                        <p class="module-desc">Gerçek kullanıcı deneyimini kanıtlayan fotoğraf, video veya spesifik fiziksel ölçü/renk metriklerinin eksikliğini cezalandırır.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <h6 class="terminal-title">root@radar-ai:~/engine/live_log</h6>
+                        <div class="terminal-dots">
+                            <span class="dot-red"></span>
+                            <span class="dot-yellow"></span>
+                            <span class="dot-green"></span>
+                        </div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line"><span class="log-time">[14:00:01]</span> <span class="log-info">SYSTEM:</span> Radar AI NLP Engine v3.2 initialized.</div>
+                        <div class="terminal-line"><span class="log-time">[14:00:03]</span> <span class="log-info">DATA:</span> Fetching target payload from Amazon API... OK.</div>
+                        <div class="terminal-line"><span class="log-time">[14:00:04]</span> <span class="log-info">MODULE:</span> Running SYS.MOD_02 (Semantic Engine)...</div>
+                        <div class="terminal-line"><span class="log-time">[14:00:05]</span> <span class="log-warn">WARNING:</span> Low lexical diversity detected in node #4092.</div>
+                        <div class="terminal-line"><span class="log-time">[14:00:06]</span> <span class="log-info">MODULE:</span> Running SYS.MOD_03 (Rating Distribution)...</div>
+                        <div class="terminal-line"><span class="log-time">[14:00:06]</span> <span class="log-error">ALERT:</span> U-Type polarization matched. Confidence Score: 0.94</div>
+                        <div class="terminal-line mt-4"><span class="log-time">[14:00:08]</span> <span class="log-info">RESULT:</span> 47% of analyzed dataset flagged as non-organic.</div>
+                        <div class="terminal-line"><span class="log-time">[14:00:08]</span> <span class="log-info">AWAITING:</span> Ready for new URL input<span class="blinking-cursor"></span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <cyber-footer></cyber-footer>
+
+    <script src="components.js"></script> 
+    <script src="script.js"></script>
+</body>
+</html>

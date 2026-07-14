@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Yönetimi | Radar AI</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    
+    <cyber-navbar></cyber-navbar>
+
+    <main class="flex-grow-1" id="adminContent" style="display: none;">
+        <div class="container py-5">
+            
+            <div class="text-center mb-5">
+                <h1 class="display-4 hero-title text-white">
+                    ADMİN PANELİ
+                </h1>
+                <p class="text-white fs-5 mt-2">Sistem istatistikleri ve genel veri akışı.</p>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid var(--primary-color);">
+                        <i class="fa-solid fa-users fa-2x mb-3" style="color: var(--primary-color);"></i>
+                        <div class="stat-value text-white" id="totalUsers">-</div>
+                        <div class="text-muted text-uppercase fw-bold mt-2">Toplam Kullanıcı</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid var(--primary-color);">
+                        <i class="fa-solid fa-magnifying-glass-chart fa-2x mb-3" style="color: var(--primary-color);"></i>
+                        <div class="stat-value text-white" id="totalAnalyses">-</div>
+                        <div class="text-muted text-uppercase fw-bold mt-2">Yapılan Analiz</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="glass-card p-4 text-center h-100" style="border-bottom: 3px solid var(--primary-color);">
+                        <i class="fa-solid fa-satellite-dish fa-2x mb-3" style="color: var(--primary-color);"></i>
+                        <div class="stat-value text-white" id="activeTracking">-</div>
+                        <div class="text-muted text-uppercase fw-bold mt-2">Aktif Takip</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-5 justify-content-center">
+                <div class="col-12">
+                    <div class="glass-card p-4">
+                        <h5 class="fw-bold mb-4 text-uppercase text-white">
+                            <i class="fa-solid fa-chart-line me-2" style="color: var(--primary-color);"></i>Günlük Analiz Trafiği
+                        </h5>
+                        <div style="position: relative; height: 350px; width: 100%;">
+                            <canvas id="adminTrafficChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-5 justify-content-center">
+                <div class="col-12">
+                    <div class="glass-card p-0 overflow-hidden" style="border: 1px solid var(--border-subtle);">
+                        
+                        <div class="p-3 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: transparent; border-bottom: 1px solid var(--border-subtle);">
+                            <h5 class="m-0 text-white fw-bold" style="letter-spacing: 1px;">
+                                <i class="fa-solid fa-users-gear me-2" style="color: var(--primary-color);"></i> SİSTEM KULLANICILARI
+                                <button class="btn btn-sm ms-3 fw-bold" style="color: var(--primary-color);" onclick="downloadUsersPDF()">
+                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF İndir
+                                </button>
+                            </h5>
+                            
+                            <div class="input-group" style="max-width: 300px;">
+                                <span class="input-group-text bg-dark border-secondary text-white" style="border-right: none;">
+                                    <i class="fa-solid fa-magnifying-glass" style="color: var(--primary-color);"></i>
+                                </span>
+                                <input type="text" id="adminUserSearch" class="form-control bg-dark border-secondary text-white" placeholder="Kullanıcı adı, e-posta ara..." style="border-left: none; box-shadow: none;">
+                            </div>
+                        </div>
+
+                        <div class="table-responsive p-3" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-dark table-hover align-middle m-0 custom-table" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-subtle); color: #ffffff; font-size: 0.9rem; text-transform: uppercase;">
+                                        <th>ID</th>
+                                        <th>Kullanıcı Adı</th>
+                                        <th>E-Posta</th>
+                                        <th>Telefon</th>
+                                        <th>Rol</th>
+                                        <th>Yönet</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUsersTableBody">
+                                    <tr><td colspan="6" class="text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Yükleniyor...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5 justify-content-center">
+                <div class="col-12">
+                    <div class="glass-card p-0 overflow-hidden" style="border: 1px solid var(--border-subtle);">
+                        
+                        <div class="p-3 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: transparent; border-bottom: 1px solid var(--border-subtle);">
+                            <h5 class="m-0 text-white fw-bold" style="letter-spacing: 1px;">
+                                <i class="fa-solid fa-network-wired me-2" style="color: var(--primary-color);"></i> KULLANICI İŞLEMLERİ
+                                <button class="btn btn-sm ms-3 fw-bold" style="color: var(--primary-color);" onclick="downloadLogsPDF()">
+                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF İndir
+                                </button>
+                            </h5>
+                            
+                            <div class="d-flex gap-2 flex-wrap">
+                                <div class="input-group" style="max-width: 200px;">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="fa-solid fa-user"></i></span>
+                                    <input type="text" id="logUserFilter" class="form-control bg-dark border-secondary text-white" placeholder="Kullanıcı Adı...">
+                                </div>
+                                
+                                <div class="input-group" style="max-width: 200px;">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="fa-solid fa-calendar-days"></i></span>
+                                    <input type="date" id="logDateFilter" class="form-control bg-dark border-secondary text-white">
+                                </div>
+                                
+                                <button class="btn btn-outline-primary fw-bold" onclick="loadAdminLogs()">
+                                    <i class="fa-solid fa-filter me-1"></i> Filtrele
+                                </button>
+                                <button class="btn btn-outline-secondary fw-bold text-white" onclick="clearLogFilters()">
+                                    Temizle
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive p-3" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-dark table-hover align-middle m-0 custom-table" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-subtle); color: #ffffff; font-size: 0.9rem; text-transform: uppercase;">
+                                        <th>Tarih / Saat</th>
+                                        <th>Kullanıcı</th>
+                                        <th>Analiz Edilen Link</th>
+                                        <th>Risk Skoru</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminLogsTableBody">
+                                    <tr><td colspan="4" class="text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Loglar Çekiliyor...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5 justify-content-center">
+                <div class="col-12">
+                    <div class="glass-card p-0 overflow-hidden" style="border: 1px solid var(--border-subtle);">
+                        
+                        <div class="p-3 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: transparent; border-bottom: 1px solid var(--border-subtle);">
+                            <div class="d-flex align-items-center">
+                                <h5 class="m-0 text-white fw-bold" style="letter-spacing: 1px;">
+                                    <i class="fa-solid fa-satellite-dish me-2" style="color: var(--primary-color);"></i> AKTİF TAKİPTEKİ ÜRÜNLER
+                                </h5>
+                                <button class="btn btn-sm ms-3 fw-bold" style="color: var(--primary-color);" onclick="downloadTrackedPDF()">
+                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF İndir
+                                </button>
+                            </div>
+                            
+                            <div class="input-group" style="max-width: 300px;">
+                                <span class="input-group-text bg-dark border-secondary text-white" style="border-right: none;">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" id="trackedUserSearch" class="form-control bg-dark border-secondary text-white" placeholder="Kullanıcı adı ara..." style="border-left: none; box-shadow: none;">
+                            </div>
+                        </div>
+
+                        <div class="table-responsive p-3" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-dark table-hover align-middle m-0 custom-table" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-subtle); color: #ffffff; font-size: 0.9rem; text-transform: uppercase;">
+                                        <th>Kullanıcı</th>
+                                        <th>Takip Edilen Link</th>
+                                        <th>Son Risk Skoru</th>
+                                        <th>Eklenme Tarihi</th>
+                                        <th>Son Kontrol</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminTrackedTableBody">
+                                    <tr><td colspan="5" class="text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Yükleniyor...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="accessDenied" class="container text-center py-5" style="display: none; margin-top: 10vh;">
+        <i class="fa-solid fa-shield-halved fa-5x text-white mb-4"></i>
+        <h1 class="text-white fw-bold">ERİŞİM ENGELLENDİ</h1>
+        <p class="text-white fs-5">Bu sayfayı görüntüleme yetkiniz bulunmuyor.</p>
+        <a href="index.html" class="btn btn-neon mt-3"><i class="fa-solid fa-home me-2"></i>Ana Sayfaya Dön</a>
+    </div>
+
+    <div class="modal fade" id="adminEditUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3" style="background: rgba(15, 23, 42, 0.95); border: 1px solid var(--border-subtle); border-radius: 12px; backdrop-filter: blur(10px);">
+                
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-white fw-bold">
+                        <i class="fa-solid fa-user-pen me-2" style="color: var(--primary-color);"></i> Kullanıcıyı Düzenle
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <input type="hidden" id="editUserId">
+                    
+                    <div class="mb-3">
+                        <label class="text-white small mb-1">Kullanıcı Adı (Değiştirilemez)</label>
+                        <input type="text" id="editUsername" class="form-control bg-dark border-secondary text-white" readonly style="opacity: 0.7;">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="text-white small mb-1">E-Posta</label>
+                        <input type="email" id="editEmail" class="form-control bg-dark border-secondary text-white">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="text-white small mb-1">Telefon</label>
+                        <input type="text" id="editPhone" class="form-control bg-dark border-secondary text-white">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="text-white small mb-1">Kullanıcı Rolü</label>
+                        <select id="editRole" class="form-select bg-dark border-secondary text-white">
+                            <option value="0">Standart Kullanıcı</option>
+                            <option value="1">Admin</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between gap-3 mt-2">
+                        <button type="button" class="btn btn-outline-danger fw-bold w-50" onclick="deleteUserByAdmin()">
+                            <i class="fa-solid fa-trash me-2"></i> Sil
+                        </button>
+                        <button type="button" class="btn btn-neon w-50 fw-bold" onclick="updateUserByAdmin()">
+                            <i class="fa-solid fa-floppy-disk me-2"></i> Kaydet
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <cyber-footer></cyber-footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let globalLoadUsers = null;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const username = sessionStorage.getItem("username");
+            const adminContent = document.getElementById("adminContent");
+            const accessDenied = document.getElementById("accessDenied");
+
+            if (!username) {
+                accessDenied.style.display = "block";
+                return;
+            }
+
+            try {
+                // İSTATİSTİKLERİ ÇEK
+                const resStats = await fetch(`http://127.0.0.1:8000/api/admin/stats?username=${encodeURIComponent(username)}`);
+                const dataStats = await resStats.json();
+                if (!resStats.ok) throw new Error(dataStats.detail);
+
+                adminContent.style.display = "block";
+                document.getElementById("totalUsers").innerText = dataStats.data.total_users;
+                document.getElementById("totalAnalyses").innerText = dataStats.data.total_analyses;
+                document.getElementById("activeTracking").innerText = dataStats.data.active_tracking;
+                cizgiGrafigiOlustur(dataStats.data.daily_stats);
+
+                // KULLANICILARI ÇEKME FONKSİYONU
+                globalLoadUsers = async (searchQuery = "") => {
+                    const tbody = document.getElementById("adminUsersTableBody");
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Aranıyor...</td></tr>`;
+                    
+                    let url = `http://127.0.0.1:8000/api/admin/users?username=${encodeURIComponent(username)}`;
+                    if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
+
+                    try {
+                        const resUsers = await fetch(url);
+                        const dataUsers = await resUsers.json();
+
+                        if (resUsers.ok && dataUsers.data.length > 0) {
+                            tbody.innerHTML = ""; 
+                            dataUsers.data.forEach(user => {
+                            // Rozet renkleri de kurumsal renklere güncellendi
+                            const roleBadge = user.is_admin 
+                                ? `<span class="badge" style="background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid var(--border-subtle);"><i class="fa-solid fa-crown me-1"></i> Admin</span>` 
+                                : `<span class="badge" style="background: transparent; color: #a1a1aa; border: 1px solid var(--border-subtle);">Kullanıcı</span>`;
+                                
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td class="text-white" style="width: 10%;">#${user.id}</td>
+                                    <td class="fw-bold text-white" style="width: 20%;">${user.username}</td>
+                                    <td style="width: 30%; word-break: break-all; color: #e2e8f0;">${user.email || '<span class="text-muted">-</span>'}</td>
+                                    <td style="width: 15%; color: #e2e8f0;">${user.phone || '<span class="text-muted">-</span>'}</td>
+                                    <td style="width: 15%;">${roleBadge}</td>
+                                    <td style="width: 10%;">
+                                        <button type="button" class="btn btn-sm fw-bold" style="border: 1px solid var(--border-subtle); color: #ffffff; background: transparent;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='transparent'" onclick="openAdminEditModal(${user.id}, '${user.username}', '${user.email || ''}', '${user.phone || ''}', ${user.is_admin ? 1 : 0})">
+                                            <i class="fa-solid fa-pen-to-square"></i> Düzenle
+                                        </button>
+                                    </td>
+                                </tr>`;
+                            });
+                        } else {
+                            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-warning py-4">Sonuç bulunamadı.</td></tr>`;
+                        }
+                    } catch (err) {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Veri çekilemedi.</td></tr>`;
+                    }
+                };
+
+                // Sayfa ilk açıldığında listeleri yükle
+                globalLoadUsers();
+                loadAdminLogs(); 
+                loadAdminTrackedItems();
+
+                // 3. ARAMA KUTUSU DİNLEYİCİSİ (Sistem Kullanıcıları İçin)
+                const adminUserSearch = document.getElementById("adminUserSearch");
+                if (adminUserSearch) {
+                    adminUserSearch.addEventListener("input", (e) => {
+                        globalLoadUsers(e.target.value);
+                    });
+                }
+
+                // 🚀 SORUNUN ÇÖZÜLDÜĞÜ YER: ARAMA KUTUSU DİNLEYİCİSİ (Takip Edilen Ürünler İçin) 🚀
+                const trackedUserSearch = document.getElementById("trackedUserSearch");
+                if (trackedUserSearch) {
+                    trackedUserSearch.addEventListener("input", (e) => {
+                        loadAdminTrackedItems(e.target.value);
+                    });
+                }
+
+            } catch (err) {
+                console.error("Admin yetki hatası:", err);
+                accessDenied.style.display = "block";
+            }
+        });
+
+        // Çizgi grafiği renkleri güncellendi
+        function cizgiGrafigiOlustur(dailyStats) {
+            const ctx = document.getElementById('adminTrafficChart').getContext('2d');
+            
+            const labels = dailyStats.map(stat => stat.date);
+            const dataPoints = dailyStats.map(stat => stat.count);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Günlük Analiz Sayısı',
+                        data: dataPoints,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)', 
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#3b82f6',
+                        pointHoverRadius: 8,
+                        pointRadius: 5,
+                        fill: true, 
+                        tension: 0.4 
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: 'Space Grotesk' },
+                            bodyFont: { family: 'Space Grotesk' },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#cbd5e1', stepSize: 1, font: { family: 'Space Grotesk' } },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1', font: { family: 'Space Grotesk' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ADMİN: KULLANICI DÜZENLEME VE SİLME İŞLEMLERİ
+
+        function openAdminEditModal(id, username, email, phone, isAdmin) {
+            document.getElementById("editUserId").value = id;
+            document.getElementById("editUsername").value = username;
+            document.getElementById("editEmail").value = email;
+            document.getElementById("editPhone").value = phone;
+            document.getElementById("editRole").value = isAdmin; 
+            
+            const editModal = new bootstrap.Modal(document.getElementById('adminEditUserModal'));
+            editModal.show();
+        }
+
+        async function updateUserByAdmin() {
+            const adminUsername = sessionStorage.getItem("username");
+            const userId = document.getElementById("editUserId").value;
+            const email = document.getElementById("editEmail").value;
+            const phone = document.getElementById("editPhone").value;
+            const isAdmin = document.getElementById("editRole").value === "1";
+            
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/api/admin/users/${userId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        admin_username: adminUsername,
+                        email: email,
+                        phone: phone,
+                        is_admin: isAdmin
+                    })
+                });
+                
+                if (res.ok) {
+                    if (typeof bildirimGoster === "function") {
+                        bildirimGoster("Kullanıcı başarıyla güncellendi.", true);
+                    } else {
+                        alert("Kullanıcı başarıyla güncellendi.");
+                    }
+                    
+                    const modalEl = document.getElementById('adminEditUserModal');
+                    bootstrap.Modal.getInstance(modalEl).hide();
+                    
+                    if (globalLoadUsers) globalLoadUsers();
+                } else {
+                    const data = await res.json();
+                    if (typeof bildirimGoster === "function") bildirimGoster("Hata: " + data.detail, false);
+                    else alert("Hata: " + data.detail);
+                }
+            } catch (e) {
+                console.error("Güncelleme Hatası:", e);
+                if (typeof bildirimGoster === "function") bildirimGoster("Sunucu ile iletişim koptu.", false);
+                else alert("Sunucu ile iletişim koptu.");
+            }
+        }
+
+        async function deleteUserByAdmin() {
+            const adminUsername = sessionStorage.getItem("username");
+            const userId = document.getElementById("editUserId").value;
+            const targetUsername = document.getElementById("editUsername").value;
+            
+            if (adminUsername === targetUsername) {
+                if (typeof bildirimGoster === "function") bildirimGoster("Kendi fişinizi buradan çekemezsiniz!", false);
+                else alert("Kendi fişinizi buradan çekemezsiniz!");
+                return;
+            }
+
+            const onay = confirm(`${targetUsername} adlı kullanıcıyı SİSTEMDEN TAMAMEN silmek istediğinize emin misiniz?`);
+            if (!onay) return;
+            
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/api/admin/users/${userId}?admin_username=${encodeURIComponent(adminUsername)}`, {
+                    method: "DELETE"
+                });
+                
+                if (res.ok) {
+                    if (typeof bildirimGoster === "function") bildirimGoster(`${targetUsername} sistemden başarıyla silindi.`, true);
+                    else alert(`${targetUsername} sistemden başarıyla silindi.`);
+                    
+                    const modalEl = document.getElementById('adminEditUserModal');
+                    bootstrap.Modal.getInstance(modalEl).hide();
+                    
+                    if (globalLoadUsers) globalLoadUsers();
+                } else {
+                    const data = await res.json();
+                    if (typeof bildirimGoster === "function") bildirimGoster("Hata: " + data.detail, false);
+                    else alert("Hata: " + data.detail);
+                }
+            } catch (e) {
+                console.error("Silme Hatası:", e);
+                if (typeof bildirimGoster === "function") bildirimGoster("Sunucu ile iletişim koptu.", false);
+                else alert("Sunucu ile iletişim koptu.");
+            }
+        }
+
+        // Logları Çeken ve Tabloya Basan Fonksiyon
+        async function loadAdminLogs() {
+            const adminUsername = sessionStorage.getItem("username");
+            const targetUser = document.getElementById("logUserFilter").value;
+            const targetDate = document.getElementById("logDateFilter").value;
+            
+            const tbody = document.getElementById("adminLogsTableBody");
+            if(!tbody) return;
+
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Yükleniyor...</td></tr>`;
+            
+            let url = `http://127.0.0.1:8000/api/admin/logs?admin_username=${encodeURIComponent(adminUsername)}`;
+            if (targetUser) url += `&target_username=${encodeURIComponent(targetUser)}`;
+            if (targetDate) url += `&target_date=${encodeURIComponent(targetDate)}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (res.ok && data.data.length > 0) {
+                    tbody.innerHTML = ""; 
+                    data.data.forEach(log => {
+                        
+                        let scoreColor = "#22c55e"; 
+                        if (log.risk_score > 20) scoreColor = "#f59e0b"; 
+                        if (log.risk_score > 50) scoreColor = "#ef4444"; 
+
+                        const shortUrl = log.url.length > 40 ? log.url.substring(0, 40) + "..." : log.url;
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="text-white small" style="width: 15%;">${log.created_at}</td>
+                                <td class="fw-bold text-white" style="width: 15%;">${log.username}</td>
+                                <td style="width: 45%;">
+                                    <a href="${log.url}" target="_blank" class="text-white text-decoration-none" style="text-decoration: underline !important;">
+                                        ${shortUrl}
+                                    </a>
+                                </td>
+                                <td style="width: 15%;">
+                                    <span class="badge" style="background: transparent; border: 1px solid ${scoreColor}; color: ${scoreColor};">
+                                        ${log.risk_score} Puan
+                                    </span>
+                                </td>
+                            </tr>`;
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-warning py-4">Bu kriterlere uygun log bulunamadı.</td></tr>`;
+                }
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-4">Loglar çekilemedi.</td></tr>`;
+            }
+        }
+
+        // Filtreleri Temizle Butonu
+        function clearLogFilters() {
+            document.getElementById("logUserFilter").value = "";
+            document.getElementById("logDateFilter").value = "";
+            loadAdminLogs(); 
+        }
+
+        // Verileri Çekme Fonksiyonu
+        async function loadAdminTrackedItems(searchQuery = "") {
+            const adminUsername = sessionStorage.getItem("username");
+            const tbody = document.getElementById("adminTrackedTableBody");
+            if(!tbody) return;
+
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Yükleniyor...</td></tr>`;
+            
+            let url = `http://127.0.0.1:8000/api/admin/tracked_items?admin_username=${encodeURIComponent(adminUsername)}`;
+            if (searchQuery) url += `&target_username=${encodeURIComponent(searchQuery)}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (res.ok && data.data.length > 0) {
+                    tbody.innerHTML = ""; 
+                    data.data.forEach(item => {
+                        let scoreColor = "#22c55e"; 
+                        if (item.risk_score > 20) scoreColor = "#f59e0b"; 
+                        if (item.risk_score > 50) scoreColor = "#ef4444"; 
+
+                        const shortUrl = item.url.length > 40 ? item.url.substring(0, 40) + "..." : item.url;
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="fw-bold text-white" style="width: 15%;">${item.username}</td>
+                                <td style="width: 35%;">
+                                    <a href="${item.url}" target="_blank" class="text-white text-decoration-none" style="text-decoration: underline !important;">
+                                        ${shortUrl}
+                                    </a>
+                                </td>
+                                <td style="width: 15%;">
+                                    <span class="badge" style="background: transparent; border: 1px solid ${scoreColor}; color: ${scoreColor};">
+                                        ${item.risk_score || 0} Puan
+                                    </span>
+                                </td>
+                                <td class="text-white small" style="width: 15%;">${item.created_at}</td>
+                                <td class="text-white small" style="width: 15%;">${item.last_checked_at}</td>
+                            </tr>`;
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-warning py-4">Sistemde takip edilen ürün bulunmuyor.</td></tr>`;
+                }
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">Veriler çekilemedi.</td></tr>`;
+            }
+        }
+
+        // PDF İndirme Fonksiyonu
+        function downloadTrackedPDF() {
+            const adminUsername = sessionStorage.getItem("username");
+            const targetUser = document.getElementById("trackedUserSearch").value;
+            let url = `http://127.0.0.1:8000/api/admin/export/tracked_pdf?admin_username=${encodeURIComponent(adminUsername)}`;
+            if (targetUser) url += `&target_username=${encodeURIComponent(targetUser)}`;
+            window.open(url, '_blank');
+        }
+
+        // ADMİN: PDF DIŞA AKTARMA FONKSİYONLARI 
+        
+        function downloadUsersPDF() {
+            const adminUsername = sessionStorage.getItem("username");
+            const url = `http://127.0.0.1:8000/api/admin/export/users_pdf?admin_username=${encodeURIComponent(adminUsername)}`;
+            
+            window.open(url, '_blank');
+        }
+
+        function downloadLogsPDF() {
+            const adminUsername = sessionStorage.getItem("username");
+            const targetUser = document.getElementById("logUserFilter").value;
+            const targetDate = document.getElementById("logDateFilter").value;
+            
+            let url = `http://127.0.0.1:8000/api/admin/export/logs_pdf?admin_username=${encodeURIComponent(adminUsername)}`;
+            if (targetUser) url += `&target_username=${encodeURIComponent(targetUser)}`;
+            if (targetDate) url += `&target_date=${encodeURIComponent(targetDate)}`;
+            
+            window.open(url, '_blank');
+        }
+
+    </script>
+</body>
+</html>
